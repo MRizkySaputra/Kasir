@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kasir/controllers/menu_controllers.dart';
 import 'package:kasir/widgets/textfield.dart';
-import 'package:kasir/themes/app_textstyle.dart';
+import 'package:kasir/widgets/admin_product_card.dart'; // Import widget baru
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -36,7 +36,7 @@ class _MenuPageState extends State<MenuPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            //search bar
+            // Search Bar
             child: TextField(
               onChanged: (v) => setState(() => _searchQuery = v),
               decoration: InputDecoration(
@@ -61,10 +61,22 @@ class _MenuPageState extends State<MenuPage> {
               child: GridView.builder(
                 itemCount: items.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 0.85),
+                  crossAxisCount: 2, 
+                  mainAxisSpacing: 12, 
+                  crossAxisSpacing: 12, 
+                  childAspectRatio: 0.80, // Disesuaikan agar muat tombol edit/delete
+                ),
                 itemBuilder: (context, i) {
                   final item = items[i];
-                  return _menuCard(context, item, i, controller);
+                  
+                  // PENGGUNAAN WIDGET BARU
+                  return AdminProductCard(
+                    name: item.name,
+                    price: item.price,
+                    image: item.image,
+                    onEdit: () => _showEditDialog(context, controller, i),
+                    onDelete: () => _confirmDelete(context, controller, i),
+                  );
                 },
               ),
             ),
@@ -72,7 +84,7 @@ class _MenuPageState extends State<MenuPage> {
         ],
       ),
 
-      // tombol tambah menu
+      // Tombol Tambah Menu
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddDialog(context, controller),
         child: const Icon(Icons.add),
@@ -80,52 +92,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  Widget _menuCard(BuildContext context, MenuItem item, int index, MenuControllers controller) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(.04), blurRadius: 8)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // image placeholder
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-              ),
-              child: const Center(child: Icon(Icons.fastfood, size: 40)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(item.name, style: AppTextStyle.withWeight(AppTextStyle.bodyLarge, FontWeight.w600)),
-              const SizedBox(height: 6),
-              Text("Rp ${item.price}", style: AppTextStyle.bodyMedium),
-              const SizedBox(height: 8),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () => _showEditDialog(context, controller, index),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _confirmDelete(context, controller, index),
-                ),
-              ]),
-            ]),
-          )
-        ],
-      ),
-    );
-  }
-
-  // DIALOG add
+  // DIALOG ADD
   void _showAddDialog(BuildContext ctx, MenuControllers controller) {
     _nameC.clear();
     _priceC.clear();
@@ -160,7 +127,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  // DIALOG edit
+  // DIALOG EDIT
   void _showEditDialog(BuildContext ctx, MenuControllers controller, int index) {
     final item = controller.items[index];
     _nameC.text = item.name;
@@ -196,7 +163,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  // Confirm delete
+  // CONFIRM DELETE
   void _confirmDelete(BuildContext ctx, MenuControllers controller, int index) {
     showDialog(
       context: ctx,
@@ -211,7 +178,7 @@ class _MenuPageState extends State<MenuPage> {
               controller.deleteMenu(index);
               Navigator.pop(ctx);
             },
-            child: const Text("Hapus"),
+            child: const Text("Hapus", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

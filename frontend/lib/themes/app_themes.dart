@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
 const Color primaryGreen = Color.fromARGB(255, 40, 78, 62);
+const Color secondaryYellow = Color(0xFFFFF571);
+const Color bgGrey = Color(0xFFF5F5F5);
 
 class AppThemes {
   static final light = ThemeData(
     useMaterial3: true,
     primaryColor: primaryGreen,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: bgGrey, // Default background jadi abu muda
     brightness: Brightness.light,
 
     colorScheme: ColorScheme.fromSeed(
       seedColor: primaryGreen,
       primary: primaryGreen,
+      secondary: secondaryYellow, // Set secondary color
       brightness: Brightness.light,
       surface: Colors.white,
     ),
