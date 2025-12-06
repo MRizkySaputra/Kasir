@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-// --- BAGIAN INI YANG PENTING (SESUAI STRUKTUR FOLDER KAMU) ---
-import 'package:kasir/pages/admin/admin_wrapper.dart';    // Mengarah ke folder admin
-import 'package:kasir/pages/kasir/dashboard_wrapper.dart'; // Mengarah ke folder kasir
+import 'package:kasir/pages/admin/admin_wrapper.dart';
+import 'package:kasir/pages/kasir/dashboard_wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,39 +13,31 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
-  // Controller untuk menangkap input teks
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // Selalu dispose controller agar memori tidak bocor
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  // LOGIKA LOGIN
   void _handleLogin() {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    // Cek apakah Admin
     if (username == 'admin' && password == 'admin123') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const AdminWrapper()),
       );
-    } 
-    // Cek apakah Kasir
-    else if (username == 'kasir' && password == 'kasir123') {
+    } else if (username == 'kasir' && password == 'kasir123') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const DashboardWrapper()),
       );
-    } 
-    // Jika Salah
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Username atau Password salah!"),
@@ -58,15 +49,23 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil tinggi layar agar responsif
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color(0xFF28503E),
-      body: Column(
+      // Ganti Column dengan Stack agar bisa menumpuk widget
+      body: Stack(
         children: [
-          // ==================== GAMBAR ATAS ====================
-          Expanded(
-            flex: 7,
+          // ==================== LAYER 1: GAMBAR (Di Belakang) ====================
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            // Tinggi gambar dibuat sedikit lebih dari setengah layar (55%)
+            // agar tertutup rapi oleh container putih
+            height: screenHeight * 0.55, 
             child: Container(
-              width: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/ilustrasi kasir.png"),
@@ -76,14 +75,17 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
 
-          // ================= BAGIAN FORM LOGIN =================
-          Expanded(
-            flex: 7,
+          // ================= LAYER 2: FORM LOGIN (Di Depan) =================
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
               width: double.infinity,
+              // Tinggi form setengah layar (50%)
+              height: screenHeight * 0.5, 
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
+                // Radius ini sekarang akan menimpa gambar di belakangnya
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
               ),
               child: SingleChildScrollView(
