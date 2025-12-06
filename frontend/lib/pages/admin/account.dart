@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kasir/pages/login_page.dart';
+import 'package:kasir/auth/login_page.dart';
 import 'package:kasir/themes/app_textstyle.dart';
 
 class AccountPage extends StatelessWidget {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:kasir/pages/dashboard_wrapper.dart';
-import 'package:kasir/pages/admin/admin_wrapper.dart';
+
+// --- BAGIAN INI YANG PENTING (SESUAI STRUKTUR FOLDER KAMU) ---
+import 'package:kasir/pages/admin/admin_wrapper.dart';    // Mengarah ke folder admin
+import 'package:kasir/pages/kasir/dashboard_wrapper.dart'; // Mengarah ke folder kasir
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +13,48 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
+
+  // Controller untuk menangkap input teks
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Selalu dispose controller agar memori tidak bocor
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // LOGIKA LOGIN
+  void _handleLogin() {
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    // Cek apakah Admin
+    if (username == 'admin' && password == 'admin123') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminWrapper()),
+      );
+    } 
+    // Cek apakah Kasir
+    else if (username == 'kasir' && password == 'kasir123') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardWrapper()),
+      );
+    } 
+    // Jika Salah
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Username atau Password salah!"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
 
-          // ================= BAGIAN PUTIH LOGIN FORM =================
+          // ================= BAGIAN FORM LOGIN =================
           Expanded(
             flex: 7,
             child: Container(
@@ -42,20 +86,12 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
               ),
-
-              // === Tambahkan ScrollView agar tidak overflow ===
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 10),
-
-                    // Logo gambar
                     Image.asset("assets/images/logo.png", width: 80, height: 80),
-
                     const SizedBox(height: 10),
-
-                    // Welcome Back
                     const Text(
                       "Welcome Back 👋",
                       style: TextStyle(
@@ -64,19 +100,16 @@ class _LoginPageState extends State<LoginPage> {
                         color: Color.fromARGB(255, 74, 73, 73),
                       ),
                     ),
-
                     const SizedBox(height: 25),
 
-                    // Username
+                    // --- INPUT USERNAME ---
                     TextField(
+                      controller: _usernameController,
                       decoration: InputDecoration(
                         hintText: "username",
                         filled: true,
                         fillColor: const Color(0xFFF2F2F2),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 15,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
                           borderSide: BorderSide.none,
@@ -86,26 +119,22 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 15),
 
-                    // Password dengan ikon mata
+                    // --- INPUT PASSWORD ---
                     TextField(
+                      controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         hintText: "password",
                         filled: true,
                         fillColor: const Color(0xFFF2F2F2),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 15,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
                           ),
                           onPressed: () {
                             setState(() {
@@ -118,19 +147,12 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 25),
 
-                    // Tombol Masuk
+                    // --- TOMBOL MASUK ---
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AdminWrapper(),
-                            ),
-                          );
-                        },
+                        onPressed: _handleLogin,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF28503E),
                           shape: RoundedRectangleBorder(

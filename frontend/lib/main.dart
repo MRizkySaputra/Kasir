@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/pages/admin/admin_wrapper.dart';
-import 'package:kasir/pages/login_page.dart';
+import 'package:kasir/auth/login_page.dart';
 import 'package:provider/provider.dart';
 import 'themes/app_themes.dart';
 import 'controllers/menu_controllers.dart';
