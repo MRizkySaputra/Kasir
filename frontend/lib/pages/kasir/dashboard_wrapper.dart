@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/pages/admin/admin_dashboard.dart';
-import 'package:kasir/pages/menu_page.dart';
+import 'package:kasir/pages/kasir/menu_page.dart';
 import 'package:kasir/widgets/buttom_navigation.dart';
 
 class DashboardWrapper extends StatefulWidget {
