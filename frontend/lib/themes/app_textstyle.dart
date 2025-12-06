@@ -2,60 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyle {
-  static TextStyle h1 = GoogleFonts.poppins(
-    fontSize: 32,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-    letterSpacing: -0.5
-  );
-  static TextStyle h2 = GoogleFonts.poppins(
-    fontSize: 24,
-    fontWeight: FontWeight.w600,
-    letterSpacing: -0.5
-  );
-  static TextStyle h3 = GoogleFonts.poppins(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-
-  );
-
-  static TextStyle bodyLarge = GoogleFonts.poppins(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-  );
-  static TextStyle bodyMedium = GoogleFonts.poppins(
-    fontSize: 15,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0.2,
-  );
-  static TextStyle bodySmall = GoogleFonts.poppins(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle buttonLarge = GoogleFonts.poppins(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.5,
-  );
-  static TextStyle buttonMedium = GoogleFonts.poppins(
-    fontSize: 15,
-    fontWeight: FontWeight.w600,
-  );
-  static TextStyle buttonSmall = GoogleFonts.poppins(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle labelMedium = GoogleFonts.poppins(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle withColor(TextStyle style, Color color){
-    return style.copyWith(color: color);
+  static TextStyle _base(
+    double size,
+    FontWeight weight, {
+    double? letterSpacing,
+    double? height,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: size,
+      fontWeight: weight,
+      letterSpacing: letterSpacing,
+      height: height ?? 1.2,
+    );
   }
-  static TextStyle withWeight(TextStyle style, FontWeight weight){
-    return style.copyWith(fontWeight: weight);
-  }
+
+  // Headings
+  static final h1 = _base(32, FontWeight.w700, letterSpacing: -0.5);
+  static final h2 = _base(24, FontWeight.w600, letterSpacing: -0.5);
+  static final h3 = _base(18, FontWeight.w600);
+
+  // Body
+  static final bodyLarge = _base(16, FontWeight.w400);
+  static final bodyMedium = _base(15, FontWeight.w400, letterSpacing: 0.2);
+  static final bodySmall = _base(14, FontWeight.w400);
+
+  // Buttons
+  static final buttonLarge = _base(16, FontWeight.w600, letterSpacing: 0.5);
+  static final buttonMedium = _base(15, FontWeight.w600);
+  static final buttonSmall = _base(14, FontWeight.w500);
+
+  // Labels
+  static final labelMedium = _base(14, FontWeight.w500);
+
+  // Helpers
+  static TextStyle withColor(TextStyle style, Color color) =>
+      style.copyWith(color: color);
+
+  static TextStyle withWeight(TextStyle style, FontWeight weight) =>
+      style.copyWith(fontWeight: weight);
 }

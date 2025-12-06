@@ -1,7 +1,7 @@
 import 'package:kasir/themes/app_textstyle.dart';
 import 'package:flutter/material.dart';
 
-class CustomTextfield extends StatefulWidget{
+class Textfield extends StatefulWidget{
   final String label;
   final IconData prefixIcon;
   final TextInputType keyboardType;
@@ -11,7 +11,7 @@ class CustomTextfield extends StatefulWidget{
   final void Function(String)? onChanged;
   final String? initialValue;
 
-  const CustomTextfield({
+  const Textfield({
     super.key,
     required this.label,
     required this.prefixIcon,
@@ -24,10 +24,10 @@ class CustomTextfield extends StatefulWidget{
     });
 
   @override
-  State<CustomTextfield> createState() => _CustomTextfieldState();
+  State<Textfield> createState() => _TextfieldState();
 }
 
-class _CustomTextfieldState extends State<CustomTextfield> {
+class _TextfieldState extends State<Textfield> {
   bool _obsecureText = true;
 
   @override
