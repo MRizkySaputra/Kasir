@@ -13,4 +13,7 @@ module.exports = {
     baseUrl: process.env.SERVER_BASE_URL || "http://localhost:5001",
     port: process.env.SERVER_PORT || 5001,
   },
+  jwt: {
+    secretJWT: process.env.SECRET_JWT,
+  },
 };
