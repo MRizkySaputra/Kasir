@@ -10,13 +10,11 @@ class DashboardPage extends StatelessWidget {
       backgroundColor: Colors.white,
 
       body: SafeArea(
-        child: Column( // HEADER TIDAK IKUT SCROLL
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // =============================
-            // HEADER — FIXED
-            // =============================
+            // ======== HEADER — FIXED =======
             Container(
               padding: const EdgeInsets.all(16),
               color: Colors.white,
@@ -50,18 +48,14 @@ class DashboardPage extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // =============================
-            // SCROLL AREA
-            // =============================
+            // ======= SCROLL AREA ========
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    // =============================
-                    // CARD STATISTIK
-                    // =============================
+                    // ======= CARD STATISTIK =======
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
@@ -85,9 +79,7 @@ class DashboardPage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // =============================
-                    // GRAFIK
-                    // =============================
+                    // ======= GRAFIK =======
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
@@ -168,9 +160,7 @@ class DashboardPage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // =============================
-                    // MENU TERLARIS
-                    // =============================
+                    // ======= MENU TERLARIS =======
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
@@ -197,9 +187,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // =============================
-  // COMPONENT CARD STATISTIK
-  // =============================
+  // ======= COMPONENT CARD STATISTIK =======
   Widget _buildStatCard({
     required IconData icon,
     required String title,
@@ -247,9 +235,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // =============================
-  // COMPONENT MENU TERLARIS
-  // =============================
+// ======= COMPONENT MENU TERLARIS =======
   Widget _buildBestSeller() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),

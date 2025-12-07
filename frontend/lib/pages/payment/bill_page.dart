@@ -36,7 +36,7 @@ class BillPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 16.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: primaryGreen),
-              onPressed: () {}, // Logic Print
+              onPressed: () {},
               child: const Text("Print Bills", style: TextStyle(color: Colors.white)),
             ),
           )

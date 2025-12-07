@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kasir/controllers/menu_controllers.dart';
 import 'package:kasir/widgets/textfield.dart';
-import 'package:kasir/widgets/admin_product_card.dart'; // Import widget baru
+import 'package:kasir/widgets/admin_product_card.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});

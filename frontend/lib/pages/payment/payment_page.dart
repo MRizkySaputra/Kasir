@@ -55,7 +55,6 @@ class _PaymentPageState extends State<PaymentPage> {
                   final item = widget.cart[i];
                   return Row(
                     children: [
-                      // Gambar Kecil
                       Container(
                         width: 50, height: 50,
                         decoration: BoxDecoration(
@@ -177,7 +176,7 @@ class _PaymentPageState extends State<PaymentPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE0E0E0), // Abu-abu background sesuai gambar
+        color: const Color(0xFFE0E0E0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

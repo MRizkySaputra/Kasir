@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/models/menu_model.dart';
 import 'package:kasir/themes/app_themes.dart';
-import 'package:intl/intl.dart'; // Import intl
+import 'package:intl/intl.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -17,7 +17,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Definisikan formatter yang sama atau pass dari parent
     final NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp ',
@@ -71,7 +70,6 @@ class ProductCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // UPDATE DI SINI: Gunakan formatter
                       Text(
                         currencyFormatter.format(product.price),
                         style: const TextStyle(

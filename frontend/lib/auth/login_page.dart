@@ -54,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF28503E),
-      // Ganti Column dengan Stack agar bisa menumpuk widget
       body: Stack(
         children: [
           // ==================== LAYER 1: GAMBAR (Di Belakang) ====================
@@ -62,8 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             top: 0,
             left: 0,
             right: 0,
-            // Tinggi gambar dibuat sedikit lebih dari setengah layar (55%)
-            // agar tertutup rapi oleh container putih
+
             height: screenHeight * 0.55, 
             child: Container(
               decoration: const BoxDecoration(
@@ -80,12 +78,10 @@ class _LoginPageState extends State<LoginPage> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: double.infinity,
-              // Tinggi form setengah layar (50%)
               height: screenHeight * 0.5, 
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
-                // Radius ini sekarang akan menimpa gambar di belakangnya
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
               ),
               child: SingleChildScrollView(
