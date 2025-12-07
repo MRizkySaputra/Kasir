@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class MenuItem {
   String name;
   int price;
-  String? image; // optional, bisa diisi url atau asset
+  String? image;
 
   MenuItem({required this.name, required this.price, this.image});
 }

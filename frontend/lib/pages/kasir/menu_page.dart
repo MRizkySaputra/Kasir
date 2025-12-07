@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/models/menu_model.dart';
+import 'package:kasir/pages/payment/payment_page.dart';
 import 'package:kasir/widgets/product_card.dart';
-import 'package:kasir/themes/app_themes.dart'; // Import Tema
+import 'package:kasir/themes/app_themes.dart'; 
+import 'package:intl/intl.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -13,9 +15,9 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   // State Data
   String _selectedCategory = 'Semua';
-  String _customerName = "Ariel Hikmat";
+  String _customerName = "";
   String _orderType = "Dine in";
-  
+
   final List<OrderItem> _cart = [];
 
   // Dummy Data
@@ -27,6 +29,13 @@ class _MenuPageState extends State<MenuPage> {
     Product('5', 'Kerupuk', 2000, 'Pelengkap', 'assets/images/food.png'),
     Product('6', 'Sambal Ijo', 3000, 'Pelengkap', 'assets/images/food.png'),
   ];
+
+  // Formatter Mata Uang
+  final NumberFormat _currencyFormatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp ',
+    decimalDigits: 0,
+  );
 
   void _addToCart(Product product) {
     setState(() {
@@ -59,13 +68,15 @@ class _MenuPageState extends State<MenuPage> {
         : _products.where((p) => p.category == _selectedCategory).toList();
 
     return Scaffold(
-      backgroundColor: bgGrey, // Dari AppThemes
+      backgroundColor: bgGrey, 
       appBar: AppBar(
         title: const Text(
-          "Menu", 
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)
+          "Menu",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         centerTitle: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -82,8 +93,14 @@ class _MenuPageState extends State<MenuPage> {
                     suffixIcon: const Icon(Icons.search, color: Colors.grey),
                     filled: true,
                     fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -91,10 +108,12 @@ class _MenuPageState extends State<MenuPage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: ['Semua', 'Ayam', 'Minuman', 'Pelengkap']
-                        .map((cat) => Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _buildCategoryChip(cat),
-                            ))
+                        .map(
+                          (cat) => Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: _buildCategoryChip(cat),
+                          ),
+                        )
                         .toList(),
                   ),
                 ),
@@ -115,10 +134,12 @@ class _MenuPageState extends State<MenuPage> {
               ),
               itemBuilder: (context, index) {
                 final product = displayProducts[index];
-                
+
                 // Cek qty di cart
                 int qty = 0;
-                final cartIndex = _cart.indexWhere((item) => item.product.id == product.id);
+                final cartIndex = _cart.indexWhere(
+                  (item) => item.product.id == product.id,
+                );
                 if (cartIndex != -1) qty = _cart[cartIndex].quantity;
 
                 return ProductCard(
@@ -133,31 +154,55 @@ class _MenuPageState extends State<MenuPage> {
       ),
 
       // FLOATING CART BUTTON
-      bottomNavigationBar: _cart.isNotEmpty 
-        ? Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -2))]
-            ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryGreen, // Dari AppThemes
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              onPressed: _showDetailOrderSheet,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("${_cart.length} Items", style: const TextStyle(color: Colors.white)),
-                  const Text("Lihat Pesanan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text("Rp ${_total.toStringAsFixed(0)}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      bottomNavigationBar: _cart.isNotEmpty
+          ? Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
                 ],
               ),
-            ),
-          )
-        : null,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryGreen, 
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: _showDetailOrderSheet,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${_cart.length} Items",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const Text(
+                      "Lihat Pesanan",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      _currencyFormatter.format(_total),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
     );
   }
 
@@ -168,7 +213,7 @@ class _MenuPageState extends State<MenuPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? primaryGreen : Colors.grey[200], // Dari AppThemes
+          color: isSelected ? primaryGreen : Colors.grey[200],
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
@@ -192,7 +237,7 @@ class _MenuPageState extends State<MenuPage> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setSheetState) {
             return Container(
-              height: MediaQuery.of(context).size.height * 0.85,
+              height: MediaQuery.of(context).size.height * 0.9,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -201,22 +246,49 @@ class _MenuPageState extends State<MenuPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20),
-                  
+
                   // Header Bottom Sheet
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Detail Order", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      const Text(
+                        "Detail Order",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(20)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         child: DropdownButton<String>(
                           value: _orderType,
                           underline: const SizedBox(),
-                          items: ["Dine in", "Take away"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                          onChanged: (val) => setSheetState(() => _orderType = val!),
+                          items: ["Dine in", "Take away"]
+                              .map(
+                                (e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)),
+                              )
+                              .toList(),
+                          onChanged: (val) =>
+                              setSheetState(() => _orderType = val!),
                         ),
                       ),
                     ],
@@ -227,7 +299,9 @@ class _MenuPageState extends State<MenuPage> {
                     controller: TextEditingController(text: _customerName),
                     decoration: InputDecoration(
                       labelText: "Nama Pelanggan",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onChanged: (val) => _customerName = val,
                   ),
@@ -249,35 +323,70 @@ class _MenuPageState extends State<MenuPage> {
                           child: Row(
                             children: [
                               Container(
-                                width: 50, height: 50,
-                                decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8)),
-                                child: const Icon(Icons.fastfood, color: Colors.grey, size: 20),
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.fastfood,
+                                  color: Colors.grey,
+                                  size: 20,
+                                ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(item.product.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    Text("Rp ${item.product.price.toStringAsFixed(0)}", style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                                    Text(
+                                      item.product.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    // PERBAIKAN: Gunakan Formatter di sini
+                                    Text(
+                                      _currencyFormatter.format(item.product.price),
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                               Row(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.remove_circle_outline, color: Colors.grey),
+                                    icon: const Icon(
+                                      Icons.remove_circle_outline,
+                                      color: Colors.grey,
+                                    ),
                                     onPressed: () {
-                                      setSheetState(() => _updateQty(index, -1));
-                                      setState((){});
+                                      setSheetState(
+                                        () => _updateQty(index, -1),
+                                      );
+                                      setState(() {});
                                     },
                                   ),
-                                  Text("${item.quantity}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(
+                                    "${item.quantity}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   IconButton(
-                                    icon: const Icon(Icons.add_circle_outline, color: Colors.grey),
+                                    icon: const Icon(
+                                      Icons.add_circle_outline,
+                                      color: Colors.grey,
+                                    ),
                                     onPressed: () {
-                                      setSheetState(() => _updateQty(index, 1));
-                                      setState((){});
+                                      setSheetState(
+                                        () => _updateQty(index, 1),
+                                      );
+                                      setState(() {});
                                     },
                                   ),
                                 ],
@@ -292,7 +401,10 @@ class _MenuPageState extends State<MenuPage> {
                   // Summary
                   Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Column(
                       children: [
                         _summaryRow("Sub Total", _subTotal),
@@ -301,43 +413,78 @@ class _MenuPageState extends State<MenuPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text("Total Payment", style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text("Rp ${_total.toStringAsFixed(0)}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            const Text(
+                              "Total Payment",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              _currencyFormatter.format(_total),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Buttons
                   Row(
                     children: [
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryGreen, // Dari AppThemes
+                            backgroundColor: primaryGreen, 
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                           onPressed: () {
                             Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Pembayaran Berhasil!")));
-                            setState(() => _cart.clear());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PaymentPage(
+                                  cart: _cart,
+                                  subtotal: _subTotal,
+                                  tax: _tax,
+                                  total: _total,
+                                  customerName: _customerName,
+                                ),
+                              ),
+                            );
                           },
-                          child: const Text("Pay Now", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            "Pay Now",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: secondaryYellow, // Dari AppThemes
+                            backgroundColor: secondaryYellow,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("Later", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            "Later",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -358,7 +505,10 @@ class _MenuPageState extends State<MenuPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-          Text("Rp ${value.toStringAsFixed(0)}", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+          Text(
+            value == 0 ? "-" : _currencyFormatter.format(value),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+          ),
         ],
       ),
     );

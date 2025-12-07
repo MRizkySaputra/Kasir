@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kasir/pages/admin/admin_dashboard.dart';
+import 'package:kasir/pages/kasir/dashboard.dart';
 import 'package:kasir/pages/kasir/menu_page.dart';
 import 'package:kasir/widgets/buttom_navigation.dart';
 
@@ -14,7 +14,7 @@ class _DashboardWrapperState extends State<DashboardWrapper> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = const [
-    DashboardPage(),
+    KasirDashboardPage(),
     MenuPage(),
     // OrderPage(),
     // AccountPage(),

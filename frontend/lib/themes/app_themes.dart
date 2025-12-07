@@ -8,13 +8,13 @@ class AppThemes {
   static final light = ThemeData(
     useMaterial3: true,
     primaryColor: primaryGreen,
-    scaffoldBackgroundColor: bgGrey, // Default background jadi abu muda
+    scaffoldBackgroundColor: bgGrey,
     brightness: Brightness.light,
 
     colorScheme: ColorScheme.fromSeed(
       seedColor: primaryGreen,
       primary: primaryGreen,
-      secondary: secondaryYellow, // Set secondary color
+      secondary: secondaryYellow,
       brightness: Brightness.light,
       surface: Colors.white,
     ),

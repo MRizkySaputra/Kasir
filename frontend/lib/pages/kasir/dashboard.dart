@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kasir/themes/app_themes.dart'; // Import jika perlu akses warna
+import 'package:kasir/themes/app_themes.dart';
 
 class KasirDashboardPage extends StatelessWidget {
   const KasirDashboardPage({super.key});
@@ -7,7 +7,7 @@ class KasirDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgGrey, // Gunakan warna background dari tema
+      backgroundColor: bgGrey,
       body: SafeArea(
         child: Column(
           children: [
