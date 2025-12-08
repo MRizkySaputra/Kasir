@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kasir/models/menu_model.dart';
 import 'package:kasir/pages/payment/payment_page.dart';
 import 'package:kasir/widgets/product_card.dart';
-import 'package:kasir/themes/app_themes.dart'; 
+import 'package:kasir/themes/app_themes.dart';
 import 'package:intl/intl.dart';
+import 'package:kasir/controllers/order_controller.dart';
+import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -68,7 +70,7 @@ class _MenuPageState extends State<MenuPage> {
         : _products.where((p) => p.category == _selectedCategory).toList();
 
     return Scaffold(
-      backgroundColor: bgGrey, 
+      backgroundColor: bgGrey,
       appBar: AppBar(
         title: const Text(
           "Menu",
@@ -169,7 +171,7 @@ class _MenuPageState extends State<MenuPage> {
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryGreen, 
+                  backgroundColor: primaryGreen,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -229,11 +231,17 @@ class _MenuPageState extends State<MenuPage> {
 
   // --- BOTTOM SHEET ---
   void _showDetailOrderSheet() {
+    // 1. Buat controller DI LUAR builder agar tidak reset saat error muncul
+    final TextEditingController nameController = TextEditingController(text: _customerName);
+    
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
+        // 2. Variabel state lokal untuk error message
+        String? nameErrorText;
+
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setSheetState) {
             return Container(
@@ -295,15 +303,24 @@ class _MenuPageState extends State<MenuPage> {
                   ),
                   const SizedBox(height: 20),
 
+                  // --- TEXT FIELD NAMA ---
                   TextField(
-                    controller: TextEditingController(text: _customerName),
+                    controller: nameController,
                     decoration: InputDecoration(
                       labelText: "Nama Pelanggan",
+                      // 3. Tampilkan errorText di sini jika ada error
+                      errorText: nameErrorText, 
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onChanged: (val) => _customerName = val,
+                    onChanged: (val) {
+                      _customerName = val;
+                      // Hapus error saat user mulai mengetik lagi
+                      if (nameErrorText != null) {
+                        setSheetState(() => nameErrorText = null);
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
 
@@ -346,7 +363,6 @@ class _MenuPageState extends State<MenuPage> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    // PERBAIKAN: Gunakan Formatter di sini
                                     Text(
                                       _currencyFormatter.format(item.product.price),
                                       style: const TextStyle(
@@ -437,13 +453,21 @@ class _MenuPageState extends State<MenuPage> {
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryGreen, 
+                            backgroundColor: primaryGreen,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           onPressed: () {
+                            // 4. Validasi Nama Pelanggan
+                            if (_customerName.trim().isEmpty) {
+                              setSheetState(() {
+                                nameErrorText = "Nama Pelanggan wajib diisi!";
+                              });
+                              return; // Stop proses
+                            }
+
                             Navigator.pop(context);
                             Navigator.push(
                               context,
@@ -477,7 +501,34 @@ class _MenuPageState extends State<MenuPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+                            // Validasi juga untuk tombol Later (Opsional)
+                            if (_customerName.trim().isEmpty) {
+                              setSheetState(() {
+                                nameErrorText = "Nama Pelanggan wajib diisi!";
+                              });
+                              return;
+                            }
+
+                            // 1. Simpan ke OrderController dengan status 'Proses'
+                            context.read<OrderController>().addOrder(
+                              customerName: _customerName,
+                              tableNumber: "A1",
+                              status: "Proses",
+                              items: _cart,
+                              tax: _tax,
+                              total: _total,
+                            );
+
+                            Navigator.pop(context);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Pesanan disimpan (Proses)!"),
+                              ),
+                            );
+                            setState(() => _cart.clear());
+                          },
                           child: const Text(
                             "Later",
                             style: TextStyle(

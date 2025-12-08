@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kasir/themes/app_themes.dart';
 import 'package:kasir/models/menu_model.dart';
 import 'package:kasir/pages/payment/bill_page.dart';
+import 'package:lottie/lottie.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
   final List<OrderItem> cart;
@@ -23,15 +24,20 @@ class PaymentSuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("Payment"), backgroundColor: Colors.white, elevation: 0),
+      appBar: AppBar(
+        title: const Text("Payment"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.black,
-              child: Icon(Icons.check, color: Colors.white, size: 60),
+            Lottie.asset(
+              'assets/animations/order_success.json',
+              width: 200,
+              height: 200,
+              repeat: false,
             ),
             const SizedBox(height: 24),
             const Text(
@@ -46,22 +52,35 @@ class PaymentSuccessPage extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryGreen,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                   onPressed: () {
                     // Kembali ke dashboard dan hapus history route pembayaran
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
-                  child: const Text("Continue", style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 const SizedBox(width: 20),
                 // Tombol See Bills
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryGreen,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -77,10 +96,13 @@ class PaymentSuccessPage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text("See Bills", style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    "See Bills",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
