@@ -95,7 +95,7 @@ class BillPage extends StatelessWidget {
               const Divider(color: Colors.black),
 
               // --- TOTALAN ---
-              _priceRow("Subtotal ${cart.length} Produk", total * 100 / 103), // Estimasi reverse tax
+              _priceRow("Subtotal ${cart.length} Produk", total * 100 / 103),
               _priceRow("Tax", total * 3 / 103),
               const SizedBox(height: 8),
               Row(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kasir/pages/kasir/account.dart';
 import 'package:kasir/pages/kasir/dashboard.dart';
 import 'package:kasir/pages/kasir/menu_page.dart';
+import 'package:kasir/pages/kasir/order_page.dart';
 import 'package:kasir/widgets/buttom_navigation.dart';
 
 class DashboardWrapper extends StatefulWidget {
@@ -16,8 +18,8 @@ class _DashboardWrapperState extends State<DashboardWrapper> {
   final List<Widget> _pages = const [
     KasirDashboardPage(),
     MenuPage(),
-    // OrderPage(),
-    // AccountPage(),
+    OrderPage(),
+    AccountPage(),
   ];
 
   @override
