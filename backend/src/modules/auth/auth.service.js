@@ -52,7 +52,7 @@ class AuthService {
     const isValid = await bcrypt.compare(password, data.password);
     if (!isValid) throw new BadRequestError("Passwordnya salah boy");
 
-    const token = jwt.sign({ id: data.id, email: data.email });
+    const token = jwt.sign({ id: data.id, email: data.email, role: data.role });
 
     delete data.password;
     return { user: data, token };

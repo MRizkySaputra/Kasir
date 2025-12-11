@@ -13,6 +13,7 @@ function authJWT(req, res, next) {
     const decode = jwt.verify(token);
     req.user = decode;
     req.userId = decode.id;
+    req.role = decode.role;
     next();
   } catch (err) {
     throw new UnauthorizedError("token sudah tidak valid atau kadaluarsa");

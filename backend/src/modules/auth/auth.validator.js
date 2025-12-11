@@ -16,7 +16,7 @@ const registerValidator = [
   body("password")
     .notEmpty()
     .withMessage("password wajib di isi")
-    .isLength({ max: 6 })
+    .isLength({ max: 20 })
     .withMessage("password tidak boleh lebih dari 6 karakter"),
 
   body("role")

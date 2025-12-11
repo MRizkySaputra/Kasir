@@ -38,7 +38,7 @@ class AuthController {
       if (!userId) {
         throw new NotFoundError("id tidak di temukan");
       }
-      const user = await AuthService.profile(userId);
+      const user = await AuthService.Profile(userId);
       res.status(200).json({
         success: true,
         message: "profile berhasil di ambil",

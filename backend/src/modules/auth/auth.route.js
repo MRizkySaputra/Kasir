@@ -5,7 +5,7 @@ const AuthController = require("./auth.controller");
 const asyncErrorHandle = require("../../errors/AsyncErrorHandle");
 const { registerValidator, loginValidator } = require("./auth.validator");
 const validateRequest = require("../../middlewares/validation.middleware");
-const authJWT = require("./auth.middleware");
+const authJWT = require("../../middlewares/auth.middleware");
 
 router.post(
   "/register",
