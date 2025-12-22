@@ -1,5 +1,4 @@
 const transactionService = require("./transaction.service");
-const ForbiddenError = require("../../errors/ForbiddenError");
 
 class TransactionController {
   async getAll(req, res, next) {
@@ -7,19 +6,23 @@ class TransactionController {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       const search = req.query.search || "";
+      const payment_status = req.query.payment_status || "";
+      const sortBy = req.query.sortBy || "created_at";
+      const order = req.query.order || "asc";
 
-      const result = await transactionService.getAll(
-        req.userId,
+      const result = await transactionService.getAll({
         page,
         limit,
-        search
-      );
+        search,
+        payment_status,
+        sortBy,
+        order,
+      });
 
       res.json({
         success: true,
         message: "Daftar transaksi kamu",
-        data: result.data,
-        pagination: result.pagination,
+        result,
       });
     } catch (err) {
       next(err);
@@ -28,14 +31,11 @@ class TransactionController {
 
   async getById(req, res, next) {
     try {
-      const transaction = await transactionService.getById(req.params.id);
-      if (transaction.user_id !== req.userId) {
-        throw new ForbiddenError("kamu tidak bisa akses transaksi ini");
-      }
+      const result = await transactionService.getById(req.params.id);
       res.status(200).json({
         success: true,
-        message: "transaksi di temukan",
-        data: transaction,
+        message: "transaksi ditemukan",
+        result,
       });
     } catch (err) {
       next(err);
@@ -44,14 +44,11 @@ class TransactionController {
 
   async create(req, res, next) {
     try {
-      const data = {
-        ...req.body,
-      };
-      const transaction = await transactionService.create(data);
-      res.status(200).json({
+      const result = await transactionService.create(req.body);
+      res.status(201).json({
         success: true,
-        message: "transaksi berhasil di buat",
-        data: transaction,
+        message: "transaksi berhasil dibuat",
+        result,
       });
     } catch (err) {
       next(err);
@@ -61,9 +58,10 @@ class TransactionController {
   async update(req, res, next) {
     try {
       await transactionService.update(req.body, req.params.id);
-      res
-        .status(200)
-        .json({ success: true, message: "data berhasil di update" });
+      res.status(200).json({
+        success: true,
+        message: "data berhasil diupdate",
+      });
     } catch (err) {
       next(err);
     }
@@ -72,45 +70,76 @@ class TransactionController {
   async delete(req, res, next) {
     try {
       await transactionService.delete(req.params.id);
-      res
-        .status(200)
-        .json({ success: true, message: "data berhasil di hapus" });
+      res.status(200).json({
+        success: true,
+        message: "data berhasil dihapus",
+      });
     } catch (err) {
       next(err);
     }
   }
 
-  async getMounlySummary(req, res, next) {
+  async getMonthlySummary(req, res, next) {
     try {
-      const data = await transactionService.getMounlySummary(req.userId);
+      const result = await transactionService.getMounlySummary();
       res.status(200).json({
         success: true,
-        message: "summary data berhasil di ambil",
-        data,
+        message: "summary data berhasil diambil",
+        result,
       });
     } catch (err) {
       next(err);
     }
   }
-  async getMounlyChart(req, res, next) {
+
+  async getMonthlyChart(req, res, next) {
     try {
-      const data = await transactionService.getMounlyChart(req.userId);
+      const result = await transactionService.getMounlyChart();
       res.status(200).json({
         success: true,
-        message: "chart data berhasil di ambil",
-        data,
+        message: "chart data berhasil diambil",
+        data: result,
       });
     } catch (err) {
       next(err);
     }
   }
+
   async getTodayTransaction(req, res, next) {
     try {
-      const data = await transactionService.getTodayTransaction(req.userId);
+      const result = await transactionService.getTodayTransaction();
       res.status(200).json({
         success: true,
-        message: "data transaksi hari ini berhasil di ambil",
-        data,
+        message: "data transaksi hari ini berhasil diambil",
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getWeeklySummary(req, res, next) {
+    try {
+      const result = await transactionService.getWeeklySummary();
+      res.status(200).json({
+        success: true,
+        message: "weekly summary berhasil diambil",
+        result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getBestSelling(req, res, next) {
+    try {
+      const limit = Number(req.query.limit) || 5;
+      const result = await transactionService.getBestSellingByQty(limit);
+
+      res.status(200).json({
+        success: true,
+        message: "Produk paling laris berdasarkan qty",
+        data: result,
       });
     } catch (err) {
       next(err);
