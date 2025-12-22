@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kasir/modules/users/userController.dart';
+import 'package:kasir/modules/users/userModel.dart';
 import 'package:kasir/pages/admin/admin_wrapper.dart';
-import 'package:kasir/pages/kasir/dashboard_wrapper.dart';
+import 'package:kasir/pages/kasir/kasir_wrapper.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -23,27 +29,88 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleLogin() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    if (username == 'admin' && password == 'admin123') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AdminWrapper()),
-      );
-    } else if (username == 'kasir' && password == 'kasir123') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardWrapper()),
-      );
-    } else {
+    if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Username atau Password salah!"),
+          content: Text("Username dan password wajib diisi"),
           backgroundColor: Colors.red,
         ),
       );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true; // 🔥 MULAI LOADING
+    });
+
+    final url = Uri.parse(
+      'https://kasir-git-main-agungs-projects-5080770e.vercel.app/api/v1/auth/login',
+    );
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': username, 'password': password}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final token = data['data']['token'];
+        final userJson = data['data']['user'];
+        final userModel = UserModel.fromJson(userJson);
+        context.read<UserController>().setUser(userModel, context);
+
+        if (!mounted) return;
+
+        final storage = FlutterSecureStorage();
+
+        await storage.write(key: 'token', value: token);
+
+        if (userJson['role'] == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const AdminWrapper()),
+          );
+        } else if (userJson['role'] == 'kasir') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const DashboardWrapper()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Role tidak dikenali"),
+              backgroundColor: Color.fromARGB(255, 194, 61, 0),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message'] ?? 'Login gagal'),
+            backgroundColor: const Color.fromARGB(255, 194, 61, 0),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Terjadi kesalahan: login gagal periksa koneksi anda"),
+          backgroundColor: const Color.fromARGB(255, 95, 95, 95),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false; // 🔥 STOP LOADING
+        });
+      }
     }
   }
 
@@ -62,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
             left: 0,
             right: 0,
 
-            height: screenHeight * 0.55, 
+            height: screenHeight * 0.55,
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -78,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: double.infinity,
-              height: screenHeight * 0.5, 
+              height: screenHeight * 0.5,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -88,7 +155,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    Image.asset("assets/images/logo.png", width: 80, height: 80),
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 80,
+                      height: 80,
+                    ),
                     const SizedBox(height: 10),
                     const Text(
                       "Welcome Back 👋",
@@ -107,7 +178,10 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "username",
                         filled: true,
                         fillColor: const Color(0xFFF2F2F2),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
                           borderSide: BorderSide.none,
@@ -125,14 +199,19 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "password",
                         filled: true,
                         fillColor: const Color(0xFFF2F2F2),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                           ),
                           onPressed: () {
                             setState(() {
@@ -150,21 +229,30 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: _handleLogin,
+                        onPressed: _isLoading ? null : _handleLogin,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF28503E),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40),
                           ),
                         ),
-                        child: const Text(
-                          "Masuk",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text(
+                                "Masuk",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                       ),
                     ),
                   ],

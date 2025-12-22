@@ -14,13 +14,13 @@ class SplashGifPage extends StatelessWidget {
         gifPath: 'assets/animations/checkout.gif',
         gifWidth: 269,
         gifHeight: 474,
-        
+
         // Konfigurasi Logika
         nextScreen: const LoginPage(),
         duration: const Duration(milliseconds: 3000),
-        
+
         backgroundColor: primaryGreen,
-        
+
         onInit: () async {
           debugPrint("Splash screen dimulai");
         },

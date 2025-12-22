@@ -28,7 +28,7 @@ class AdminProductCard extends StatelessWidget {
             color: Colors.black.withOpacity(.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -40,14 +40,16 @@ class AdminProductCard extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(14),
+                ),
               ),
               child: const Center(
                 child: Icon(Icons.fastfood, size: 40, color: Colors.grey),
               ),
             ),
           ),
-          
+
           // INFO & ACTIONS
           Padding(
             padding: const EdgeInsets.all(12),
@@ -58,12 +60,15 @@ class AdminProductCard extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.withWeight(AppTextStyle.bodyLarge, FontWeight.w600),
+                  style: AppTextStyle.withWeight(
+                    AppTextStyle.bodyLarge,
+                    FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text("Rp $price", style: AppTextStyle.bodyMedium),
                 const SizedBox(height: 8),
-                
+
                 // ACTION BUTTONS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -78,7 +83,11 @@ class AdminProductCard extends StatelessWidget {
                           color: Colors.blue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.edit, size: 18, color: Colors.blue),
+                        child: const Icon(
+                          Icons.edit,
+                          size: 18,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -92,14 +101,18 @@ class AdminProductCard extends StatelessWidget {
                           color: Colors.red.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.delete, size: 18, color: Colors.red),
+                        child: const Icon(
+                          Icons.delete,
+                          size: 18,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

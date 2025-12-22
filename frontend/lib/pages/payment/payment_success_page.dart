@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kasir/themes/app_themes.dart';
-import 'package:kasir/models/menu_model.dart';
-import 'package:kasir/pages/payment/bill_page.dart';
+import 'package:kasir/modules/transaction/transactionModel.dart';
+import 'package:kasir/modules/transaction/transactionDetailModel.dart';
+import 'package:kasir/pages/payment/payment_bill.dart';
 import 'package:lottie/lottie.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
-  final List<OrderItem> cart;
+  final Transactionmodel transaction;
+  final List<TransactionDetail> items;
   final double total;
   final double cash;
   final double change;
@@ -13,7 +15,8 @@ class PaymentSuccessPage extends StatelessWidget {
 
   const PaymentSuccessPage({
     super.key,
-    required this.cart,
+    required this.transaction,
+    required this.items,
     required this.total,
     required this.cash,
     required this.change,
@@ -48,7 +51,7 @@ class PaymentSuccessPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Tombol Continue (Balik ke Menu)
+                /// CONTINUE
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryGreen,
@@ -61,7 +64,6 @@ class PaymentSuccessPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Kembali ke dashboard dan hapus history route pembayaran
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   child: const Text(
@@ -69,8 +71,10 @@ class PaymentSuccessPage extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
+
                 const SizedBox(width: 20),
-                // Tombol See Bills
+
+                /// SEE BILLS
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryGreen,
@@ -86,8 +90,9 @@ class PaymentSuccessPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BillPage(
-                          cart: cart,
+                        builder: (_) => BillPage(
+                          transaction: transaction,
+                          items: items,
                           total: total,
                           cash: cash,
                           change: change,

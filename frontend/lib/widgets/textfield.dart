@@ -1,7 +1,7 @@
 import 'package:kasir/themes/app_textstyle.dart';
 import 'package:flutter/material.dart';
 
-class Textfield extends StatefulWidget{
+class Textfield extends StatefulWidget {
   final String label;
   final IconData prefixIcon;
   final TextInputType keyboardType;
@@ -15,13 +15,13 @@ class Textfield extends StatefulWidget{
     super.key,
     required this.label,
     required this.prefixIcon,
-    this.keyboardType =  TextInputType.text,
+    this.keyboardType = TextInputType.text,
     this.isPassword = false,
     this.controller,
     this.validator,
     this.onChanged,
-    this.initialValue
-    });
+    this.initialValue,
+  });
 
   @override
   State<Textfield> createState() => _TextfieldState();
@@ -31,7 +31,7 @@ class _TextfieldState extends State<Textfield> {
   bool _obsecureText = true;
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return TextFormField(
@@ -56,47 +56,41 @@ class _TextfieldState extends State<Textfield> {
           color: isDark ? Colors.grey[400] : Colors.grey[600],
         ),
         suffixIcon: widget.isPassword
-        ? IconButton(
-          onPressed: (){
-            setState(() {
-              _obsecureText = !_obsecureText;
-            });
-          },
-          icon: Icon(
-            _obsecureText ? Icons.visibility_off : Icons.visibility,
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    _obsecureText = !_obsecureText;
+                  });
+                },
+                icon: Icon(
+                  _obsecureText ? Icons.visibility_off : Icons.visibility,
+                ),
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
           ),
-          )
-          : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-            ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-            ),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
       ),
     );
   }
