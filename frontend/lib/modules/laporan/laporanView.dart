@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
+import 'package:kasir/auth/login_page.dart';
 import 'package:kasir/auth/role.dart';
+import 'package:kasir/modules/users/userController.dart';
 
 import 'package:kasir/themes/app_themes.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +38,7 @@ class _LaporanViewState extends State<LaporanView> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final controller = context.read<LaporanController>();
+      context.read<UserController>();
 
       if (widget.role == UserRole.kasir) {
         controller.getLaporanHarian();
@@ -53,9 +56,9 @@ class _LaporanViewState extends State<LaporanView> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
+    return Consumer<LaporanController>(
       builder: (context, controller, _) {
-        final controller = context.watch<LaporanController>();
+        final user = context.watch<UserController>();
         return Scaffold(
           backgroundColor: bgGrey,
           appBar: AppBar(
@@ -206,6 +209,39 @@ class _LaporanViewState extends State<LaporanView> {
                                     },
                                   ),
                           ),
+                          if (widget.role == UserRole.kasir)
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color.fromARGB(
+                                    255,
+                                    7,
+                                    114,
+                                    52,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  user.clearUser();
+
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const LoginPage(),
+                                    ),
+                                    (_) => false,
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.logout,
+                                  color: Colors.white,
+                                ),
+                                label: const Text(
+                                  "Logout",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
                         ],
                       );
                     },
